@@ -1,0 +1,28 @@
+{
+  "name": "certificate_blockchain",
+  "version": "1.0.0",
+  "description": "This project aims to create repository for certificates, further it can be used for certificate verifications",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"start\": \"node app.js\","
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohandesosama/certificates-blockchain.git"
+  },
+  "keywords": [
+    "blockchain",
+    "private",
+    "blockchain"
+  ],
+  "author": "Osama Hosameldeen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohandesosama/certificates-blockchain/issues"
+  },
+  "homepage": "https://github.com/mohandesosama/certificates-blockchain#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "nodemon":"^2.0.6"
+  }
+}
