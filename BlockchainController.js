@@ -4,10 +4,10 @@ class BlockchainController{
         this.helloWorld();
     }
     helloWorld(){
-        this.app.get("/", async (req,res) => {
+        this.app.get("/", async function (req, res) {
                 res.send("Hello World");
                 res.end();
-        });
+            });
     }
 }
 module.exports = (app)=> {
