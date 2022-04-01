@@ -8,7 +8,7 @@ class ApplicationServer{
         this.start();
     }
     initExpress(){
-        this.app.use( '/www', express.static( path.resolve( __dirname, 'www' ) ) );
+        //this.app.use( '/www', express.static( path.resolve( __dirname, 'www' ) ) );
         this.app.set("port", process.env.PORT || 8000);
     }
     initControllers()
