@@ -1,8 +1,8 @@
+const path=require("path")
 class BlockchainController{
     constructor(app){
         this.app=app;
         this.helloWorld();
-        this.app.use( '/www', express.static( path.resolve( __dirname, 'www' ) ) );
     }
     helloWorld(){
         this.app.get("/", function (req, res) {
