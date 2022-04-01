@@ -7,8 +7,7 @@ class ApplicationServer{
         this.start();
     }
     initExpress(){
-        this.app.set("port", 8000);
-        
+        this.app.set("port", process.env.PORT || 8000);
     }
     initControllers()
     {
