@@ -5,7 +5,7 @@ class BlockchainController{
     }
     helloWorld(){
         this.app.get("/", async function (req, res) {
-                res.send("Hello World");
+                res.sendFile("index.html");
                 res.end();
             });
     }
