@@ -1,6 +1,6 @@
 const SHA256 = require("crypto-js/sha256");
 const BlockClass = require("./block.js");
-const bitcoinMessage=require("bitcoinjs-message");
+//const bitcoinMessage=require("bitcoinjs-message");
 class Blockchain{
     constructor(){
         this.chain=[];
@@ -31,7 +31,7 @@ class Blockchain{
             if(self.chain.push(_block))
             {
                 self.height = self.chain.length - 1;
-                resolve(block);
+                resolve(_block);
             }
             else{
                 reject("Error, No block added")
@@ -39,6 +39,18 @@ class Blockchain{
             
         });
        
+    }
+    submitCertificate(b_data){
+        let self=this;
+        return new Promise(async (resolve,reject)=>{
+            const _block=new BlockClass.Block({data:{b_data},});
+            if(_block)
+            {
+                resolve(await self.__addBlock(_block));}
+            else{
+                reject("Can't add the required block");}
+        });
+
     }
 }
 module.exports.Blockchain = Blockchain;
