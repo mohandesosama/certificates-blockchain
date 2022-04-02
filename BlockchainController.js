@@ -11,15 +11,19 @@ class BlockchainController{
         this.addBlock();
     }
     homePage(){
-        this.app.get("/", function (req, res) {
+        let self=this;
+        this.app.get("/", async (req, res) => {
                 //res.sendFile(path.resolve( __dirname, 'www/index.html' ));
-                res.sendFile(path.join(__dirname, '/index.html'));
+                let fchain= await self.blockchain.getFullChain();
+                let json_chain=JSON.stringify(fchain);
+                res.render('index', {chain:fchain});
                 //res.end();
             });
     }
     addBlockPage(){
-        this.app.get("/add", function(req, res){
-                res.sendFile(path.join(__dirname,'/addBlock.html'));
+        this.app.get("/add", async (req, res) => {
+                //res.sendFile(path.join(__dirname,'/public/addBlock.html'));
+                res.render('add_certificate', {title:"Osama "});
         });
     }
     addBlock(){

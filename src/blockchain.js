@@ -19,6 +19,17 @@ class Blockchain{
                 resolve(this.height);
         });
     }
+    getFullChain(){
+        let self=this;
+        return new Promise((resolve,reject)=>
+        {
+            //if(self.chain.height > 0){
+                resolve(self.chain);
+            //} else{
+             //   reject("empty chain");
+           // }
+        });
+    }
     __addBlock(block){
         //self contains the current blockchain
         let self = this;

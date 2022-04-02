@@ -1,6 +1,8 @@
 const express = require("express");
 //const morgan = require("morgan");
 const body_parser=require('body-parser');
+//this multer is really important for parsing from forms
+//it will not work if you deleted the next 2 lines
 var multer = require('multer');
 var upload = multer();
 const BlockChain = require('./src/blockchain.js');
@@ -28,6 +30,9 @@ class ApplicationServer{
         this.app.use(body_parser.urlencoded({ extended: true })); 
         //multiple forms on the same page. 
         this.app.use(upload.array()); 
+        //for pug usage, pointing the templates folder
+        this.app.set('views', __dirname + '/views');
+        this.app.set('view engine', 'pug');
     }
     initControllers()
     {

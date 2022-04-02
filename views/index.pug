@@ -1,0 +1,7 @@
+extends layout 
+
+block content 
+    h2 #{chain}
+    ul
+        each block, i in chain 
+            li= block.hash
