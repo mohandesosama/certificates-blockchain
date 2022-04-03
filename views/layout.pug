@@ -2,9 +2,25 @@ doctype html
 html 
     head 
         title Blockchain Certificate Project
+        link(rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.css')
     body 
-        block content
-        br
-        hr
-        footer 
-            p Done by Osama Hosameldeen
+        .container
+            nav.navbar.navbar-expand-lg.navbar-light.bg-light
+                a.navbar-brand(href='#') Blockchain of Certificates
+                button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
+                    span.navbar-toggler-icon
+                #navbarNav.collapse.navbar-collapse
+                    ul.navbar-nav
+                        li.nav-item.active
+                            a.nav-link(href='/')
+                                | Home 
+                                span.sr-only (current)
+                        li.nav-item
+                            a.nav-link(href='/add') Add Certificate
+                        li.nav-item
+                            a.nav-link(href='#') About
+            block content
+            br
+            hr
+            footer 
+                p Done by Osama Hosameldeen

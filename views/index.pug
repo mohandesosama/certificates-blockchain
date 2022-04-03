@@ -1,7 +1,7 @@
 extends layout 
 
 block content 
-    h2 #{chain}
+    h2 Current Certificates List:
     ul
-        each block, i in chain 
-            li= block.hash
+        each c, i in certs
+            li= c.owner

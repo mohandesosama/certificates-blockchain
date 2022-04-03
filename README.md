@@ -11,3 +11,4 @@
 * [stroing into database](https://medium.com/swlh/read-html-form-data-using-get-and-post-method-in-node-js-8d2c7880adbf)
 * [using bootstrap, contact us form and redirect form](https://www.geeksforgeeks.org/build-a-simple-beginner-app-with-node-js-bootstrap-and-mongodb/)
 * [PUG templates](https://www.youtube.com/watch?v=Ad2ngx6CT0M)
+* [HTML to PUG converter](https://html2jade.org/)

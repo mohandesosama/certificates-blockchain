@@ -1,5 +1,6 @@
 const SHA256 = require("crypto-js/sha256");
 const BlockClass = require("./block.js");
+const hex2ascii = require("hex2ascii")
 //const bitcoinMessage=require("bitcoinjs-message");
 class Blockchain{
     constructor(){
@@ -10,7 +11,7 @@ class Blockchain{
     async initializeChain(){
         if (this.height === -1)
         {
-            let block = new BlockClass.Block({data:"Genesis Block"});
+            let block = new BlockClass.Block({owner:"Test",cert_name:"Genesis Block"});
             await this.__addBlock(block);
         }
     }
@@ -19,15 +20,21 @@ class Blockchain{
                 resolve(this.height);
         });
     }
-    getFullChain(){
+    getAllCertificates(){
         let self=this;
-        return new Promise((resolve,reject)=>
-        {
-            //if(self.chain.height > 0){
-                resolve(self.chain);
-            //} else{
-             //   reject("empty chain");
-           // }
+        let certs = [];
+        return new Promise(async (resolve,reject)=>{
+            self.chain.forEach((b) => {
+                let data=JSON.parse(hex2ascii(b.body));
+                if(data) certs.push(data);
+            });
+            if(certs.length >0)
+            {
+                resolve(certs);
+            }
+            else{
+                reject('No data found');
+            }
         });
     }
     __addBlock(block){
@@ -51,10 +58,10 @@ class Blockchain{
         });
        
     }
-    submitCertificate(b_data){
+    submitCertificate(owner,cert_name){
         let self=this;
         return new Promise(async (resolve,reject)=>{
-            const _block=new BlockClass.Block({data:{b_data},});
+            const _block=new BlockClass.Block({owner:owner,cert_name:cert_name});
             if(_block)
             {
                 resolve(await self.__addBlock(_block));}

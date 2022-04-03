@@ -14,30 +14,31 @@ class BlockchainController{
         let self=this;
         this.app.get("/", async (req, res) => {
                 //res.sendFile(path.resolve( __dirname, 'www/index.html' ));
-                let fchain= await self.blockchain.getFullChain();
-                let json_chain=JSON.stringify(fchain);
-                res.render('index', {chain:fchain});
+                let certs= await self.blockchain.getAllCertificates();
+                //let json_chain=JSON.stringify(fchain);
+                res.render('index', {certs:certs});
                 //res.end();
             });
     }
     addBlockPage(){
         this.app.get("/add", async (req, res) => {
                 //res.sendFile(path.join(__dirname,'/public/addBlock.html'));
-                res.render('add_certificate', {title:"Osama "});
+                res.render('add_certificate', {title:"Add Certificate "});
         });
     }
     addBlock(){
         let self=this;
         this.app.post("/add", async (req,res) => {
-            var data=req.body.block_data;
+            var owner=req.body.owner;
+            var cert_name=req.body.cert_name;
             //var val="New Block has been added into the blockchain= "+req.body.block_data;
             //res.send(req.body.block_data)
             //return console.log(req.body.block_data);
-            if(data)
+            if(owner && cert_name)
             {
-                let block= await self.blockchain.submitCertificate(data);
+                let block= await self.blockchain.submitCertificate(owner,cert_name);
                 if(block){
-                    return res.status(200).json(block);
+                    res.redirect('/');
                 }
                 else
                 {

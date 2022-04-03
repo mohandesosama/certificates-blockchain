@@ -1,4 +1,5 @@
 const express = require("express");
+const path= require('path');
 //const morgan = require("morgan");
 const body_parser=require('body-parser');
 //this multer is really important for parsing from forms
@@ -33,6 +34,8 @@ class ApplicationServer{
         //for pug usage, pointing the templates folder
         this.app.set('views', __dirname + '/views');
         this.app.set('view engine', 'pug');
+        //set static folder
+        this.app.use(express.static(path.join(__dirname,'public')));
     }
     initControllers()
     {
