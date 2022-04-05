@@ -10,15 +10,22 @@ html
                 button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
                     span.navbar-toggler-icon
                 #navbarNav.collapse.navbar-collapse
-                    ul.navbar-nav
+                    ul.nav.navbar-nav
                         li.nav-item.active
                             a.nav-link(href='/')
                                 | Home 
-                                span.sr-only (current)
+                                span.sr-only
                         li.nav-item
                             a.nav-link(href='/add') Add Certificate
+                    ul.nav.navbar-nav.navbar-right
                         li.nav-item
-                            a.nav-link(href='#') About
+                            a.nav-link(href='/register') Register
+                        li.nav-item
+                            a.nav-link(href='/login') Log In
+            != messages('message',locals)
+            if errors 
+                each error, i in errors 
+                    div(class="alert alert-danger") #{error.msg}
             block content
             br
             hr

@@ -11,7 +11,7 @@ class Blockchain{
     async initializeChain(){
         if (this.height === -1)
         {
-            let block = new BlockClass.Block({owner:"Test",cert_name:"Genesis Block"});
+            let block = new BlockClass.Block({owner:"No certificates yet.",cert_name:"Genesis Block"});
             await this.__addBlock(block);
         }
     }
@@ -28,6 +28,7 @@ class Blockchain{
                 let data=JSON.parse(hex2ascii(b.body));
                 if(data) certs.push(data);
             });
+            
             if(certs.length >0)
             {
                 resolve(certs);
