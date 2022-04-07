@@ -1,7 +1,24 @@
 extends layout 
 
 block content 
-    h2 Current Certificates List:
+    br
+    br
+    h4 About Blockchain of Certificates 
+    .image-block
+        img(src='bchain.png' alt='bchain' style='width:350px; float:right;')
+        p
+        | Blockchain of Certificates is a repository for professional certificates. 
+        | The main objective is to have a unified, integral and rigid location for all 
+        | professional certificates around the world. Blockchain technology will be adopted
+        | to make sure of the authentication and verification of the certificates.  
+        p
+        | Blockchain is used to make integrity of the blocks inside it. It can't be changed 
+        | perturbed or deleted. It will be kept forever on the blockchain. The certificate 
+        | is applied by the owner. It will be verified electronically and by using miners 
+        | if more than 50% of the miners accepted it, then it will be published on the as a
+        | transaction in the blockchain. 
+    br
+    h4 Current Certificates List:
     ul
         each c, i in certs
             li= c.owner

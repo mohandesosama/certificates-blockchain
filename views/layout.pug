@@ -18,10 +18,16 @@ html
                         li.nav-item
                             a.nav-link(href='/add') Add Certificate
                     ul.nav.navbar-nav.navbar-right
-                        li.nav-item
-                            a.nav-link(href='/register') Register
-                        li.nav-item
-                            a.nav-link(href='/login') Log In
+                        if user
+                            li.nav-item
+                                a.nav-link(href='/logout') Logout
+                            li.nav-item
+                                a.nav-link(href='/userpage') #{user.username}
+                        else 
+                            li.nav-item
+                                a.nav-link(href='/register') Register
+                            li.nav-item
+                                a.nav-link(href='/login') Log In
             != messages('message',locals)
             if errors 
                 each error, i in errors 

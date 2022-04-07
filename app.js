@@ -13,8 +13,9 @@ var fs = require('fs');
 
 // validation , from this youtube video https://youtu.be/rBzCvbA0Dls
 const expressValidator = require('express-validator');
-const flash = require('connect-flash');
+//const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
 
 //var multer = require('multer');
 //var upload = multer();
@@ -48,6 +49,7 @@ class ApplicationServer{
         this.app.set('view engine', 'pug');
         //set static folder
         this.app.use(express.static(path.join(__dirname,'public')));
+        this.app.use(express.static(path.join(__dirname,'images')));
         //express session middle ware
         // Express Session Middleware
         this.app.use(session({
@@ -81,7 +83,12 @@ class ApplicationServer{
             };
             }
         }));
+        require('./src/passport')(passport,this.db);
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
+        this.passport=passport;
     }
+
     initDB()
     {
         var dbFile = './databases/users.db';
@@ -94,7 +101,7 @@ class ApplicationServer{
         var db = new sqlite3.Database(dbFile);
 
         if (!dbExists) {
-            db.run('CREATE TABLE IF NOT EXISTS user(name TEXT,email TEXT,username TEXT, password TEXT, password2 TEXT)');
+            db.run('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT,wallet_address TEXT,name TEXT,email TEXT,username TEXT, password TEXT, password2 TEXT)');
             console.log('table created')
         }
         return db

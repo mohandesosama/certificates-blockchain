@@ -20,10 +20,12 @@
   },
   "homepage": "https://github.com/mohandesosama/certificates_blockchain#readme",
   "dependencies": {
+    "bitcoinjs-lib": "^6.0.1",
     "body-parser": "^1.19.2",
     "bower": "^1.8.14",
     "connect-flash": "^0.1.1",
     "crypto-js": "^4.1.1",
+    "ecpair": "^2.0.1",
     "express": "^4.17.3",
     "express-messages": "^1.0.1",
     "express-session": "^1.17.2",
@@ -34,6 +36,7 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "pug": "^3.0.2",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "tiny-secp256k1": "^2.2.1"
   }
 }

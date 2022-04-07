@@ -1,23 +1,38 @@
 //const path=require("path");
 const SHA256 = require("crypto-js/sha256");
-const { join } = require("path");
+const passport=require('passport');
+const wallet= require('./src/wallet.js');
+
 class BlockchainController{
     constructor(app,db, bchainObj){
         this.app=app;
         this.db = db;
         this.blockchain=bchainObj;
+        this.wallet=new wallet.Wallet();
+        //this.Wallet=new
         //create the tables 
         //this.createDBTables();
         //GET forms here
+        this.allRoutes();
         this.homePage();
         this.addBlockPage();
         this.registerUserPage();
         this.userLoginPage()
         
+        
         //POST forms here
         this.addBlock();
         this.addUser();
         this.userLogin();
+        this.userLogout();
+        
+    }
+    allRoutes(){
+        this.app.get('*',function(req,res,next){
+            //console.log('user ' + JSON.stringify(req.user));
+            res.locals.user=req.user || null;
+            next();
+        });
     }
     homePage(){
         let self=this;
@@ -90,6 +105,12 @@ class BlockchainController{
 
             if(errors){
                 res.render('register', {title:"User Registeration",errors:errors});
+              /*  errors.forEach(error => {
+                    console.log(error.msg);
+                    req.flash('info', error.msg);
+                });
+                res.redirect('/register'); */
+
             }
             else
             {
@@ -100,7 +121,9 @@ class BlockchainController{
                 var password2=req.body.password2;
                 
                 self.db.serialize(()=>{
-                    self.db.run('INSERT INTO user(name,email,username,password,password2) VALUES(?,?,?,?,?)', [name, email,username, SHA256(password), SHA256(password2)], function(err) {
+                    //keypairs=this.generateKeyPairs();
+                    console.log(self.wallet.getWalletAddress());
+                    self.db.run('INSERT INTO user(wallet_address, name,email,username,password,password2) VALUES(?,?,?,?,?,?)', [self.wallet.getWalletAddress(), name, email,username, SHA256(password), SHA256(password2)], function(err) {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send("An error occured, user not registered")
@@ -118,43 +141,26 @@ class BlockchainController{
             res.render('login', {title:"User Login "});
     });
     }
-    userLogin(){
-        let self=this;
-        this.app.post("/login", async (req,res) => {
-            req.checkBody('username','User Name is required').notEmpty();
-            req.checkBody('password','Password is required').notEmpty();
 
-            let errors=req.validationErrors();
-
-            if(errors){
-                res.render('login', {title:"User Login",errors:errors});
-            }
-            else
-            {
-                var username=req.body.username;
-                var password=req.body.password;
-                
-                self.db.serialize(()=>{
-                    self.db.get('select username, password from user where username=? and password=?', [username, SHA256(password)], function(err,row) {
-                    if (err || !row) {
-                        //console.log(err.message);
-                        req.flash('info', 'Can\'t login, make sure you have an account');
-                        res.redirect('/login'); 
-                    }
-                    else
-                    {
-                        req.flash('success', 'You logged in');
-                        res.redirect('/'); 
-                    }
-
-                           
-                    });
-                });
-                
-            }
-          
+    userLogin()
+    {
+        this.app.post('/login', function(req,res,next){
+            passport.authenticate('local', { 
+            successRedirect: '/',
+            failureRedirect: '/login',
+            failureFlash: true
+        })(req,res,next);
         });
     }
+    userLogout()
+    {
+        this.app.get('/logout',function(req,res){
+            req.logout();
+            req.flash('success',"You are logged out");
+            res.redirect('/login')
+        })
+    }
+
 }
 
 module.exports = (app,db, bchainObj)=> {
