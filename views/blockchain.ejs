@@ -1,0 +1,20 @@
+<%- include("_header") -%>
+<!--source of grid https://getbootstrap.com/docs/4.1/layout/grid/ -->
+<!--source of colors https://getbootstrap.com/docs/4.0/utilities/colors/-->
+<br>
+<h4>Blockchain </h4>
+<br>
+<% for (var i=0 ; i < blocks.length ; i++) { %>
+<div class="row justify-content-md-center">
+    <div class="col-8 p-3 mb-2 bg-light text-dark"> 
+        <span class="text-primary"> <strong>Block #:</strong>  </span> <%- blocks[i].height %> <br>
+        <span class="text-primary"> <strong>Body:</strong></span>  <%- blocks[i].body.toString().slice(0,70) %> <br>
+        <span class="text-primary"> <strong>Time:</strong> </span>  <%- blocks[i].time %> <br>
+        <span class="text-primary"><strong>Pervious Hash:</strong></span>   <%- blocks[i].previousBlockHash  %> <br> 
+        <span class="text-primary"> <strong>Hash:</strong> </span> <%- blocks[i].hash %> 
+    </div>
+</div>
+<% } %>
+
+<%- include("_footer") -%>
+

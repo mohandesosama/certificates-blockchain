@@ -20,6 +20,19 @@ class Blockchain{
                 resolve(this.height);
         });
     }
+    getChainBlocks(){
+        let self=this;
+        return new Promise(async (resolve,reject) => {
+            if(self.chain.length > 0)
+            {
+                resolve(self.chain)
+            }
+            else
+            {
+                reject('Chain is empty');
+            }
+        });
+    }
     getAllCertificates(){
         let self=this;
         let certs = [];

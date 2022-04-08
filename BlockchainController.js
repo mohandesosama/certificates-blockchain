@@ -15,6 +15,7 @@ class BlockchainController{
         //GET forms here
         this.allRoutes();
         this.homePage();
+        this.blockChainPage();
         this.addBlockPage();
         this.registerUserPage();
         this.userLoginPage()
@@ -38,9 +39,21 @@ class BlockchainController{
         let self=this;
         this.app.get("/", async (req, res) => {
                 //res.sendFile(path.resolve( __dirname, 'www/index.html' ));
-                let certs= await self.blockchain.getAllCertificates();
+                //let certs= await self.blockchain.getAllCertificates();
                 //let json_chain=JSON.stringify(fchain);
-                res.render('index', {certs:certs});
+                //res.render('index', {certs:certs});
+                res.render('index',  {express_flash: req.flash('success') });
+                //res.end();
+            });
+    }
+    blockChainPage(){
+        let self=this;
+        this.app.get("/blockchain", async (req, res) => {
+                //res.sendFile(path.resolve( __dirname, 'www/index.html' ));
+                //let certs= await self.blockchain.getAllCertificates();
+                let blocks= await self.blockchain.getChainBlocks();
+                //let json_chain=JSON.stringify(fchain);
+                res.render('blockchain', {blocks:blocks});
                 //res.end();
             });
     }
@@ -49,29 +62,19 @@ class BlockchainController{
     addBlockPage(){
         this.app.get("/add", async (req, res) => {
                 //res.sendFile(path.join(__dirname,'/public/addBlock.html'));
-                res.render('add_certificate', {title:"Add Certificate "});
+                res.render('add_certificate');
         });
     }
     addBlock(){
         let self=this;
         this.app.post("/add", async (req,res) => {
-            req.checkBody('owner','Owner is required').notEmpty();
-            req.checkBody('cert_name','Certificate name is required').notEmpty();
-
-            let errors=req.validationErrors();
-
-            if(errors){
-                res.render('add_certificate', {title:"Add Certificate ",errors:errors});
-            }
-            else
-            {
-                var owner=req.body.owner;
+                var cert_owner=req.body.cert_owner;
                 var cert_name=req.body.cert_name;
                 //var val="New Block has been added into the blockchain= "+req.body.block_data;
                 //res.send(req.body.block_data)
                 //return console.log(req.body.block_data);
-    
-                let block= await self.blockchain.submitCertificate(owner,cert_name);
+                
+                let block= await self.blockchain.submitCertificate(cert_owner,cert_name);
                 if(block){
                     req.flash('success', 'Article Added');
                     res.redirect('/');
@@ -80,7 +83,7 @@ class BlockchainController{
                 {
                     return res.status(500).send("An error occured, block not added")
                 }
-            }
+            
           
         });
     }
@@ -94,26 +97,26 @@ class BlockchainController{
     addUser(){
         let self=this;
         this.app.post("/register", async (req,res) => {
-            req.checkBody('name','Name is required').notEmpty();
-            req.checkBody('email','Email is not valid').isEmail();
-            req.checkBody('username','User Name is required').notEmpty();
-            req.checkBody('password','Password is required').notEmpty();
-            req.checkBody('password2','Password don\'t match').equals(req.body.password);
+            //req.checkBody('name','Name is required').notEmpty();
+            //req.checkBody('email','Email is not valid').isEmail();
+            //req.checkBody('username','User Name is required').notEmpty();
+           //req.checkBody('password','Password is required').notEmpty();
+            //req.checkBody('password2','Password don\'t match').equals(req.body.password);
 
 
-            let errors=req.validationErrors();
+            //let errors=req.validationErrors();
 
-            if(errors){
-                res.render('register', {title:"User Registeration",errors:errors});
+            //if(errors){
+             //   res.render('register', {title:"User Registeration",errors:errors});
               /*  errors.forEach(error => {
                     console.log(error.msg);
                     req.flash('info', error.msg);
                 });
                 res.redirect('/register'); */
 
-            }
-            else
-            {
+          //  }
+         //   else
+         //   {
                 var name=req.body.name;
                 var email=req.body.email;
                 var username=req.body.username;
@@ -132,7 +135,7 @@ class BlockchainController{
                     res.redirect('/login');                    });
                 });
                 
-            }
+         //   }
           
         });
     }
