@@ -7,20 +7,23 @@ var ECPair = (0, ecpair_1.default)(ecc);
 var bitcoin = require('bitcoinjs-lib');
 class Wallet{
     constructor(){
-        this.keypair=this.generateKeyPairs();
-        this.address=this.keypair['address'];
     }
-    generateKeyPairs(){
+    generateNewKeyPairs(){
         /*It can generate a random address [and support the retrieval of transactions for that address (via 3PBP)*/
         const keyPair = ECPair.makeRandom();
         const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-        const publicKey = keyPair.publicKey.toString('hex');
-        const privateKey = keyPair.toWIF();
-        return { address, privateKey, publicKey };
+        this.address = address;
+        this.publicKey = keyPair.publicKey.toString('hex');
+        this.privateKey = keyPair.toWIF();
         }
-    getWalletAddress()
-    {
+    getWalletAddress(){
         return this.address;
+    }
+    getPublicKey(){
+        return this.publicKey;
+    }
+    getPrivateKey(){
+        return this.privateKey;
     }
 }
 module.exports.Wallet= Wallet;

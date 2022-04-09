@@ -18,7 +18,8 @@ class BlockchainController{
         this.blockChainPage();
         this.addBlockPage();
         this.registerUserPage();
-        this.userLoginPage()
+        this.userLoginPage();
+        this.displayUserPage();
         
         
         //POST forms here
@@ -76,7 +77,7 @@ class BlockchainController{
                 
                 let block= await self.blockchain.submitCertificate(cert_owner,cert_name);
                 if(block){
-                    req.flash('success', 'Article Added');
+                    req.flash('success', 'Certificate Added');
                     res.redirect('/');
                 }
                 else
@@ -91,42 +92,22 @@ class BlockchainController{
     //register users
     registerUserPage(){
         this.app.get("/register", async (req, res) => {
-                res.render('register', {title:"User Registeration "});
+                res.render('register');
         });
     }
     addUser(){
         let self=this;
         this.app.post("/register", async (req,res) => {
-            //req.checkBody('name','Name is required').notEmpty();
-            //req.checkBody('email','Email is not valid').isEmail();
-            //req.checkBody('username','User Name is required').notEmpty();
-           //req.checkBody('password','Password is required').notEmpty();
-            //req.checkBody('password2','Password don\'t match').equals(req.body.password);
-
-
-            //let errors=req.validationErrors();
-
-            //if(errors){
-             //   res.render('register', {title:"User Registeration",errors:errors});
-              /*  errors.forEach(error => {
-                    console.log(error.msg);
-                    req.flash('info', error.msg);
-                });
-                res.redirect('/register'); */
-
-          //  }
-         //   else
-         //   {
                 var name=req.body.name;
                 var email=req.body.email;
                 var username=req.body.username;
                 var password=req.body.password;
-                var password2=req.body.password2;
                 
                 self.db.serialize(()=>{
-                    //keypairs=this.generateKeyPairs();
-                    console.log(self.wallet.getWalletAddress());
-                    self.db.run('INSERT INTO user(wallet_address, name,email,username,password,password2) VALUES(?,?,?,?,?,?)', [self.wallet.getWalletAddress(), name, email,username, SHA256(password), SHA256(password2)], function(err) {
+                    self.wallet.generateNewKeyPairs();
+                    var wallet_address=self.wallet.getWalletAddress();
+                    console.log('w address ' + wallet_address);
+                    self.db.run('INSERT INTO user(wallet_address, name,email,username,password) VALUES(?,?,?,?,?)', [wallet_address, name, email,username, SHA256(password)], function(err) {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send("An error occured, user not registered")
@@ -141,7 +122,7 @@ class BlockchainController{
     }
     userLoginPage(){
         this.app.get("/login", async (req, res) => {
-            res.render('login', {title:"User Login "});
+            res.render('login');
     });
     }
 
@@ -154,6 +135,7 @@ class BlockchainController{
             failureFlash: true
         })(req,res,next);
         });
+        
     }
     userLogout()
     {
@@ -162,6 +144,13 @@ class BlockchainController{
             req.flash('success',"You are logged out");
             res.redirect('/login')
         })
+    }
+    //display user data
+    displayUserPage()
+    {
+        this.app.get("/userpage", async (req, res) => {
+            res.render('userpage');
+    });
     }
 
 }

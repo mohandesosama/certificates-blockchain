@@ -1,12 +1,16 @@
 // source https://stackoverflow.com/questions/23481817/node-js-passport-autentification-with-sqlite
 // source https://youtu.be/mAOxWf36YLo
 const SHA256 = require("crypto-js/sha256");
+const req = require("express/lib/request");
 const LocalStrategy = require('passport-local').Strategy;
 module.exports=function(passport,db){
     passport.use(new LocalStrategy(function(username, password, done) {
         db.get('select username, id from user where username=? and password=?',username, SHA256(password), function(err, row) {
             if(err) console.log(err)
-            if (!row) return done(null, false, {message: 'No user found'});
+            if (!row) {
+              return done(null, false, null);
+            }
+            //console.log('flash ' + JSON.stringify(req));
             return done(null, row);
           });
       }));

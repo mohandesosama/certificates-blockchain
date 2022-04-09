@@ -60,7 +60,8 @@ class ApplicationServer{
         // Express Messages Middleware
         this.app.use(flash());
         this.app.use(function (req, res, next) {
-            res.locals.messages = require('express-messages')(req, res);
+            //res.locals.messages = require('express-messages')(req, res);
+            res.locals.messages = req.flash();
             next();
         });
         
@@ -82,7 +83,7 @@ class ApplicationServer{
         var db = new sqlite3.Database(dbFile);
 
         if (!dbExists) {
-            db.run('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT,wallet_address TEXT,name TEXT,email TEXT,username TEXT, password TEXT, password2 TEXT)');
+            db.run('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT,wallet_address TEXT,name TEXT,email TEXT,username TEXT, password TEXT)');
             console.log('table created')
         }
         return db
