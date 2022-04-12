@@ -1,6 +1,17 @@
 <%- include("_header") -%>
-<h5>Welcome <%= user.username %> </h5> 
-<p> User Name is : <%= user.username %> </p>
-<p> User ID is : <%= user.id %> </p>
+<br>
+<h4>Welcome <%= user.username %> </h4> 
+<br>
+<div class="row">
+    <div class="col-6">
+        <p> User Name is : <%= user.username %> </p>
+        <p> User ID is : <%= user.id %> </p>
+        <p> Wallet address : <%= user.key_pair %> </p>
+    </div>
+    <div class="col"  style="text-align:center">
+        <img src="<%=qrcode_filename%>" alt="qrcode image">
+        <h6> <%= user.key_pair %> </h6>
+    </div>
+</div>
 
 <%- include("_footer") -%>

@@ -2,7 +2,8 @@
 const SHA256 = require("crypto-js/sha256");
 const passport=require('passport');
 const wallet= require('./src/wallet.js');
-
+const fs = require('fs');
+const QRCode = require('qrcode');
 class BlockchainController{
     constructor(app,db, bchainObj){
         this.app=app;
@@ -102,12 +103,11 @@ class BlockchainController{
                 var email=req.body.email;
                 var username=req.body.username;
                 var password=req.body.password;
-                
                 self.db.serialize(()=>{
-                    self.wallet.generateNewKeyPairs();
-                    var wallet_address=self.wallet.getWalletAddress();
-                    console.log('w address ' + wallet_address);
-                    self.db.run('INSERT INTO user(wallet_address, name,email,username,password) VALUES(?,?,?,?,?)', [wallet_address, name, email,username, SHA256(password)], function(err) {
+                    //every time you add new user, create new keypair
+                    var keys=self.wallet.getKeys();
+                    console.log('keypair saved into db' + JSON.stringify(keys));
+                    self.db.run('INSERT INTO user(keys, name,email,username,password) VALUES(?,?,?,?,?)', [JSON.stringify(keys), name, email,username, SHA256(password)], function(err) {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send("An error occured, user not registered")
@@ -129,10 +129,23 @@ class BlockchainController{
     userLogin()
     {
         this.app.post('/login', function(req,res,next){
-            passport.authenticate('local', { 
-            successRedirect: '/',
-            failureRedirect: '/login',
-            failureFlash: true
+           // generate the authenticate method and pass the req/res
+        passport.authenticate('local', function(err, user, info) {
+            if (err) { 
+                req.flash('error', "Errors in login " + err.toString())
+                return next(err); 
+            }
+            if (!user) { 
+                req.flash('error', "Invalid user, please try again")
+                return res.redirect('/login'); }
+
+            // req / res held in closure
+            req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            req.flash('success',"You successfully logged in")
+            return res.redirect('/')
+            });
+
         })(req,res,next);
         });
         
@@ -149,7 +162,31 @@ class BlockchainController{
     displayUserPage()
     {
         this.app.get("/userpage", async (req, res) => {
-            res.render('userpage');
+            //use qr code
+            var uname= res.locals.user.username
+            var keys=res.locals.user.keys
+     
+            this.wallet.setKeys(JSON.parse(keys));
+            var waddress=this.wallet.getWalletAddress();
+            //it says the private key should be a buffer. 
+            //this.wallet.signMessageUsingPrivateKey("any", keys['privateKey'])
+            //console.log('user ' + res.locals.user.username)
+            const src = 'images/qrcodes/'+ uname + '_qrcode.png';
+            console.log(src)
+            var exists = fs.existsSync(src);
+            // make sure you don't create the file every time you run the program. 
+            if (!exists) {
+                const stream = fs.createWriteStream(src);
+                const code = await QRCode.toFileStream(stream, waddress);
+                //console.log('qrcode: '+code)
+            }
+            
+            //const exists = await utils.fileExists(src);
+            //if(!exists) {
+              //  const stream = fs.createWriteStream(src);
+               // const code = await QRCode.toFileStream(stream, qrCodeText);
+           // }
+            res.render('userpage',{qrcode_filename: uname + '_qrcode.png'});
     });
     }
 

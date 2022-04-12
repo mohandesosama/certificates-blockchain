@@ -4,9 +4,11 @@
   "description": "This project aims to create repository for certificates, further it can be used for certificate verifications",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"  },
+    "start": "node app.js"
+  },
   "dependencies": {
     "bitcoinjs-lib": "^6.0.1",
+    "bitcoinjs-message": "^2.2.0",
     "connect-flash": "^0.1.1",
     "crypto-js": "^4.1.1",
     "ecpair": "^2.0.1",
@@ -18,6 +20,7 @@
     "multer": "^1.4.4",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
+    "qrcode": "^1.5.0",
     "sqlite3": "^5.0.2",
     "tiny-secp256k1": "^2.2.1"
   }

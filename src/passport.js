@@ -8,7 +8,7 @@ module.exports=function(passport,db){
         db.get('select username, id from user where username=? and password=?',username, SHA256(password), function(err, row) {
             if(err) console.log(err)
             if (!row) {
-              return done(null, false, null);
+              return done(null, false, {message:"invalid user input "});
             }
             //console.log('flash ' + JSON.stringify(req));
             return done(null, row);
@@ -21,9 +21,11 @@ module.exports=function(passport,db){
       
       passport.deserializeUser(function(id, done) {
           //console.log('user id is ',id)
-        db.get('SELECT id, username FROM user WHERE id = ?', id, function(err, user) {
+          //Here you can return any fields you want to display in the temaplate. 
+          //for example I added wallet_address so I can display it in the user page.
+        db.get('SELECT id, username,keys FROM user WHERE id = ?', id, function(err, user) {
           if(err) console.log('this is '+err)
-          if (!user) return done(null, false);
+          if (!user) return done(null,{message:'invalid user name '} );
           return done(null, user);
         });
       });

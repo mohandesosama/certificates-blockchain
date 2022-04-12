@@ -5,25 +5,35 @@ var ecpair_1 = require("ecpair");
 var ecc = require("tiny-secp256k1");
 var ECPair = (0, ecpair_1.default)(ecc);
 var bitcoin = require('bitcoinjs-lib');
+var bitcoinMessage = require('bitcoinjs-message');
+
 class Wallet{
     constructor(){
+        this.__extractKeysFromKeypair();
     }
-    generateNewKeyPairs(){
-        /*It can generate a random address [and support the retrieval of transactions for that address (via 3PBP)*/
-        const keyPair = ECPair.makeRandom();
+    __extractKeysFromKeypair()
+    {
+        var keyPair = ECPair.makeRandom();
         const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-        this.address = address;
-        this.publicKey = keyPair.publicKey.toString('hex');
-        this.privateKey = keyPair.toWIF();
-        }
+        const publicKey = keyPair.publicKey.toString('hex');
+        const privateKey = keyPair.toWIF();
+        //console.log('key pair'+keyPair.compressed)
+        this.keys={'address':address,'publicKey':publicKey,'privateKey':privateKey}
+    }
+    getKeys(){
+        return this.keys;
+    }
+    setKeys(keys){
+        this.keys=keys;
+    }
     getWalletAddress(){
-        return this.address;
+        return this.keys['address'];
     }
-    getPublicKey(){
-        return this.publicKey;
-    }
-    getPrivateKey(){
-        return this.privateKey;
+   
+    signMessageUsingPrivateKey(message, private_key){
+        //https://github.com/bitcoinjs/bitcoinjs-message
+        var signature = bitcoinMessage.sign(message, private_key, true);
+        console.log(signature.toString('base64'))
     }
 }
 module.exports.Wallet= Wallet;

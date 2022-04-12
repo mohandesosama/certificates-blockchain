@@ -49,6 +49,7 @@ class ApplicationServer{
         //public folder, put bootstrap inside
         this.app.use(express.static(path.join(__dirname,'public')));
         this.app.use(express.static(path.join(__dirname,'images')));
+        this.app.use(express.static(path.join(__dirname,'images/qrcodes')));
         //express session middle ware
         // Express Session Middleware
         this.app.use(session({
@@ -83,7 +84,7 @@ class ApplicationServer{
         var db = new sqlite3.Database(dbFile);
 
         if (!dbExists) {
-            db.run('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT,wallet_address TEXT,name TEXT,email TEXT,username TEXT, password TEXT)');
+            db.run('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT,keys TEXT,name TEXT,email TEXT,username TEXT, password TEXT)');
             console.log('table created')
         }
         return db
