@@ -105,9 +105,9 @@ class BlockchainController{
                 var password=req.body.password;
                 self.db.serialize(()=>{
                     //every time you add new user, create new keypair
-                    var keys=self.wallet.getKeys();
-                    console.log('keypair saved into db' + JSON.stringify(keys));
-                    self.db.run('INSERT INTO user(keys, name,email,username,password) VALUES(?,?,?,?,?)', [JSON.stringify(keys), name, email,username, SHA256(password)], function(err) {
+                    var serialized_keypair=self.wallet.getSerializedKeyPair();
+                    //console.log('keypair saved into db' + JSON.stringify(keys));
+                    self.db.run('INSERT INTO user(serialized_keypair, name,email,username,password) VALUES(?,?,?,?,?)', [serialized_keypair, name, email,username, SHA256(password)], function(err) {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send("An error occured, user not registered")
@@ -164,9 +164,9 @@ class BlockchainController{
         this.app.get("/userpage", async (req, res) => {
             //use qr code
             var uname= res.locals.user.username
-            var keys=res.locals.user.keys
+            var serialized_keypair=res.locals.user.serialized_keypair
      
-            this.wallet.setKeys(JSON.parse(keys));
+            this.wallet.setKeyPair(serialized_keypair);
             var waddress=this.wallet.getWalletAddress();
             //it says the private key should be a buffer. 
             //this.wallet.signMessageUsingPrivateKey("any", keys['privateKey'])

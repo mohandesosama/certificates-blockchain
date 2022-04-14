@@ -84,7 +84,7 @@ class ApplicationServer{
         var db = new sqlite3.Database(dbFile);
 
         if (!dbExists) {
-            db.run('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT,keys TEXT,name TEXT,email TEXT,username TEXT, password TEXT)');
+            db.run('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT,serialized_keypair BLOB,name TEXT,email TEXT,username TEXT, password TEXT)');
             console.log('table created')
         }
         return db

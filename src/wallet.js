@@ -9,16 +9,29 @@ var bitcoinMessage = require('bitcoinjs-message');
 
 class Wallet{
     constructor(){
+        this.keyPair = ECPair.makeRandom();
         this.__extractKeysFromKeypair();
     }
     __extractKeysFromKeypair()
     {
-        var keyPair = ECPair.makeRandom();
-        const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-        const publicKey = keyPair.publicKey.toString('hex');
-        const privateKey = keyPair.toWIF();
+        // try serilizing keyPair object from here https://www.toptal.com/javascript/serializing-complex-objects-in-javascript
+        const { address } = bitcoin.payments.p2pkh({ pubkey: this.keyPair.publicKey });
+        const publicKey = this.keyPair.publicKey.toString('hex');
+        const privateKey = this.keyPair.toWIF();
+        this.privateKeyObj=this.keyPair.privateKey
         //console.log('key pair'+keyPair.compressed)
         this.keys={'address':address,'publicKey':publicKey,'privateKey':privateKey}
+    }
+    //best place for serialze and deserialize
+    //https://localcoder.org/best-way-to-serialize-unserialize-objects-in-javascript
+    getSerializedKeyPair()
+    {
+        return JSON.stringify(this.keyPair)
+    }
+    setKeyPair(serialized_keypair)
+    {
+        this.keyPair=JSON.parse(serialized_keypair);
+        this.__extractKeysFromKeypair();
     }
     getKeys(){
         return this.keys;
@@ -30,9 +43,9 @@ class Wallet{
         return this.keys['address'];
     }
    
-    signMessageUsingPrivateKey(message, private_key){
+    signMessageUsingPrivateKey(message){
         //https://github.com/bitcoinjs/bitcoinjs-message
-        var signature = bitcoinMessage.sign(message, private_key, true);
+        var signature = bitcoinMessage.sign(message, this.privateKeyObj, this.keyPair.compressed);
         console.log(signature.toString('base64'))
     }
 }
