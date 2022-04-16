@@ -416,6 +416,11 @@ create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+cryo@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/cryo/-/cryo-0.0.6.tgz#16833295d2ee16ff39711db840617b7ae4af0ba4"
+  integrity sha1-FoMyldLuFv85cR24QGF7euSvC6Q=
+
 crypto-js@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.1.1.tgz#9e485bcf03521041bd85844786b83fb7619736cf"

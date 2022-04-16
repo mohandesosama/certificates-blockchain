@@ -6,6 +6,7 @@ var ecc = require("tiny-secp256k1");
 var ECPair = (0, ecpair_1.default)(ecc);
 var bitcoin = require('bitcoinjs-lib');
 var bitcoinMessage = require('bitcoinjs-message');
+var Cryo = require('cryo');
 
 class Wallet{
     constructor(){
@@ -26,18 +27,14 @@ class Wallet{
     //https://localcoder.org/best-way-to-serialize-unserialize-objects-in-javascript
     getSerializedKeyPair()
     {
-        return JSON.stringify(this.keyPair)
+        console.log('serialized keypair '+ Cryo.stringify(this.keyPair))
+        return Cryo.stringify(this.keyPair)
     }
     setKeyPair(serialized_keypair)
     {
-        this.keyPair=JSON.parse(serialized_keypair);
+        console.log(serialized_keypair)
+        this.keyPair=Cryo.parse(serialized_keypair);
         this.__extractKeysFromKeypair();
-    }
-    getKeys(){
-        return this.keys;
-    }
-    setKeys(keys){
-        this.keys=keys;
     }
     getWalletAddress(){
         return this.keys['address'];
