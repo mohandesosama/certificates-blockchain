@@ -6,7 +6,6 @@ var ecc = require("tiny-secp256k1");
 var ECPair = (0, ecpair_1.default)(ecc);
 var bitcoin = require('bitcoinjs-lib');
 var bitcoinMessage = require('bitcoinjs-message');
-var Cryo = require('cryo');
 
 class Wallet{
     constructor(){
@@ -15,25 +14,21 @@ class Wallet{
     }
     __extractKeysFromKeypair()
     {
-        // try serilizing keyPair object from here https://www.toptal.com/javascript/serializing-complex-objects-in-javascript
         const { address } = bitcoin.payments.p2pkh({ pubkey: this.keyPair.publicKey });
         const publicKey = this.keyPair.publicKey.toString('hex');
         const privateKey = this.keyPair.toWIF();
+        
         this.privateKeyObj=this.keyPair.privateKey
         //console.log('key pair'+keyPair.compressed)
         this.keys={'address':address,'publicKey':publicKey,'privateKey':privateKey}
     }
-    //best place for serialze and deserialize
-    //https://localcoder.org/best-way-to-serialize-unserialize-objects-in-javascript
-    getSerializedKeyPair()
+    getPrivateKeyWif()
     {
-        console.log('serialized keypair '+ Cryo.stringify(this.keyPair))
-        return Cryo.stringify(this.keyPair)
+        return this.keys['privateKey']
     }
-    setKeyPair(serialized_keypair)
+    setKeyPair(privatekey)
     {
-        console.log(serialized_keypair)
-        this.keyPair=Cryo.parse(serialized_keypair);
+        this.keyPair=ECPair.fromWIF(privatekey)
         this.__extractKeysFromKeypair();
     }
     getWalletAddress(){

@@ -23,7 +23,7 @@ module.exports=function(passport,db){
           //console.log('user id is ',id)
           //Here you can return any fields you want to display in the temaplate. 
           //for example I added wallet_address so I can display it in the user page.
-        db.get('SELECT id, username,serialized_keypair FROM user WHERE id = ?', id, function(err, user) {
+        db.get('SELECT id, username,privatekey_wif FROM user WHERE id = ?', id, function(err, user) {
           if(err) console.log('this is '+err)
           if (!user) return done(null,{message:'invalid user name '} );
           return done(null, user);

@@ -105,9 +105,9 @@ class BlockchainController{
                 var password=req.body.password;
                 self.db.serialize(()=>{
                     //every time you add new user, create new keypair
-                    var serialized_keypair=self.wallet.getSerializedKeyPair();
-                    //console.log('keypair saved into db' + JSON.stringify(keys));
-                    self.db.run('INSERT INTO user(serialized_keypair, name,email,username,password) VALUES(?,?,?,?,?)', [serialized_keypair, name, email,username, SHA256(password)], function(err) {
+                    var privatekey_wif=self.wallet.getPrivateKeyWif();
+                  
+                    self.db.run('INSERT INTO user(privatekey_wif, name,email,username,password) VALUES(?,?,?,?,?)', [privatekey_wif, name, email,username, SHA256(password)], function(err) {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send("An error occured, user not registered")
@@ -164,9 +164,9 @@ class BlockchainController{
         this.app.get("/userpage", async (req, res) => {
             //use qr code
             var uname= res.locals.user.username
-            var serialized_keypair=res.locals.user.serialized_keypair
+            var privatekey_wif=res.locals.user.privatekey_wif
      
-            this.wallet.setKeyPair(serialized_keypair);
+            this.wallet.setKeyPair(privatekey_wif);
             var waddress=this.wallet.getWalletAddress();
             //it says the private key should be a buffer. 
             //this.wallet.signMessageUsingPrivateKey("any", keys['privateKey'])
@@ -186,7 +186,7 @@ class BlockchainController{
               //  const stream = fs.createWriteStream(src);
                // const code = await QRCode.toFileStream(stream, qrCodeText);
            // }
-            res.render('userpage',{qrcode_filename: uname + '_qrcode.png'});
+            res.render('userpage',{qrcode_filename: uname + '_qrcode.png',wallet_address:waddress});
     });
     }
 
