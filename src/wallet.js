@@ -9,6 +9,7 @@ var bitcoinMessage = require('bitcoinjs-message');
 
 class Wallet{
     constructor(){
+        //the constructor creates a brand new keyPair
         this.keyPair = ECPair.makeRandom();
         this.__extractKeysFromKeypair();
     }
