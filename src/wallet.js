@@ -29,6 +29,7 @@ class Wallet{
     }
     setKeyPair(privatekey)
     {
+        //this is another constructore, implement keyPair from existing private key
         this.keyPair=ECPair.fromWIF(privatekey)
         this.__extractKeysFromKeypair();
     }
