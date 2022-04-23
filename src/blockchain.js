@@ -84,5 +84,11 @@ class Blockchain{
         });
 
     }
+    validateChain(){
+        let self=this;
+        return new Promise(async (resolve,reject)=>{
+
+        });
+    }
 }
 module.exports.Blockchain = Blockchain;
