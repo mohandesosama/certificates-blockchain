@@ -90,5 +90,47 @@ class Blockchain{
 
         });
     }
+    validateChain1() {
+        let self = this;
+        let errorLog = [];
+        return new Promise(async (resolve, reject) => {
+            let promises = [];
+            let chainIndex = 0;
+            self.chain.forEach(block => {
+                promises.push(block.validate());
+                if (block.height > 0) {
+                    let previousBlockHash = block.previousBlockHash;
+                    let blockHash = self.chain[chainIndex - 1].hash;
+                    if (blockHash !== previousBlockHash) {
+                        errorLog.push(
+                            `Error - Block Height: ${
+                                block.height
+                            } - Previous Hash don't match.`
+                        );
+                    }
+                }
+                chainIndex++;
+            });
+            Promise.all(promises)
+                .then(results => {
+                    chainIndex = 0;
+                    results.forEach(valid => {
+                        if (!valid) {
+                            errorLog.push(
+                                `Error - Block Height: ${
+                                    self.chain[chainIndex].height
+                                } - Has been Tampered.`
+                            );
+                        }
+                        chainIndex++;
+                    });
+                    resolve(errorLog);
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject(err);
+                });
+        });
+    }
 }
 module.exports.Blockchain = Blockchain;
