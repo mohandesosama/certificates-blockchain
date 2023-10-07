@@ -46,7 +46,7 @@ Preventing certificate spoofing in a blockchain-based certificate system is cruc
 
 * Blockchain Consensus Mechanism: Utilize the blockchain's consensus mechanism (e.g., proof of work or proof of stake) to validate certificate transactions and ensure that only valid certificates are added to the blockchain.
 
-Certificate Transparency Logs on Blockchain: Maintain transparency logs on the blockchain that record all certificate issuance and revocation events. This allows for public monitoring of certificate activities, making it more difficult for malicious certificates to go unnoticed.
+* Certificate Transparency Logs on Blockchain: Maintain transparency logs on the blockchain that record all certificate issuance and revocation events. This allows for public monitoring of certificate activities, making it more difficult for malicious certificates to go unnoticed.
 
 * Smart Contract-Based Verification: Implement smart contracts to automate the verification of certificates. These contracts can define rules for validating certificates and checking their authenticity against trusted sources.
 
